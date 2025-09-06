@@ -10,11 +10,10 @@ const Item = require('./models/item.model'); // Import the Item model
 
 // Initialize the Express app
 const app = express();
-const corsOptions = {
-    origin: 'https://listers-three.vercel.app', // You will replace this later
+app.use(cors({
+    origin: "https://listers-three.vercel.app",
     optionsSuccessStatus: 200
-};
-app.use(cors(corsOptions));
+}));
 app.use(express.json());
 
 // API Routes
