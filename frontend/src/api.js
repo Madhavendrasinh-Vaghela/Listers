@@ -3,8 +3,8 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL, // Use the environment variable
-});cd
+  baseURL: process.env.REACT_APP_API_URL,
+});
 
 // This is an interceptor. It runs before every request.
 api.interceptors.request.use(
