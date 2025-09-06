@@ -11,7 +11,7 @@ const Item = require('./models/item.model'); // Import the Item model
 // Initialize the Express app
 const app = express();
 const corsOptions = {
-    origin: 'https://your-frontend-url.vercel.app', // You will replace this later
+    origin: 'https://listers-three.vercel.app/', // You will replace this later
     optionsSuccessStatus: 200
 };
 app.use(cors(corsOptions));
