@@ -21,8 +21,10 @@ app.use(express.json());
 // API Routes
 const itemsRouter = require('./routes/items');
 const usersRouter = require('./routes/users');
+const adminRouter = require('./routes/admin');
 app.use('/items', itemsRouter);
 app.use('/api/users', usersRouter);
+app.use('/api/admin', adminRouter);
 
 // Get variables from .env file
 const PORT = process.env.PORT || 5000;

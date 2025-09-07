@@ -267,3 +267,34 @@ li span {
     margin: 5px 10px 0 0;
   }
 }
+/* Admin Panel Styles */
+.admin-panel {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+.admin-section {
+  margin-bottom: 30px;
+}
+.admin-panel table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+.admin-panel th, .admin-panel td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+.admin-panel th {
+  background-color: #f4f4f9;
+}
+.status-success {
+  color: #28a745;
+  font-weight: bold;
+}
+.status-failure {
+  color: #dc3545;
+  font-weight: bold;
+}

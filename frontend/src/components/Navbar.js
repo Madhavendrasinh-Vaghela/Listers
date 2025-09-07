@@ -26,6 +26,9 @@ const Navbar = () => {
           <>
             <Link to="/login">Login</Link>
             <Link to="/register">Register</Link>
+            {user.isAdmin && <Link to="/admin">Admin Panel</Link>}
+      <span className="user-email">{user.email}</span>
+      <button onClick={handleLogout} className="logout-btn">Logout</button>
           </>
         )}
       </div>

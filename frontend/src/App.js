@@ -8,6 +8,8 @@ import TodoList from './components/TodoList';
 import PrivateRoute from './components/PrivateRoute';
 import './App.css';
 import Navbar from './components/Navbar'; 
+import AdminPanel from './components/AdminPanel';
+import AdminRoute from './components/AdminRoute';
 
 function App() {
   return (
@@ -21,6 +23,11 @@ function App() {
           {/* This is the protected route */}
           <Route path="/" element={<PrivateRoute />}>
             <Route path="/" element={<TodoList />} />
+          </Route>
+
+          {/* Admin Route */}
+             <Route path="/admin" element={<AdminRoute />}>
+            <Route path="/admin" element={<AdminPanel />} />
           </Route>
 
         </Routes>

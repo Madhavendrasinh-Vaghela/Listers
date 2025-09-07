@@ -1,8 +1,9 @@
-// utils/mailer.js
+// backend/utils/mailer.js
 
 const nodemailer = require('nodemailer');
 const Item = require('../models/item.model');
 const User = require('../models/user.model');
+const EmailLog = require('../models/emailLog.model');
 
 // Create one transporter object to be reused
 const transporter = nodemailer.createTransport({
@@ -34,33 +35,49 @@ const sendDigestEmail = async () => {
         itemListHtml += `<li>${item.text}</li>`;
       });
       itemListHtml += '</ul>';
-
-      await transporter.sendMail({
+      
+      const mailOptions = {
         from: `To-Do List App <${process.env.SENDER_EMAIL}>`,
         to: user.email,
         subject: 'Your Daily To-Do List Reminder',
         html: itemListHtml,
-      });
-      console.log(`Digest email sent successfully to ${user.email}!`);
+      };
+
+      try {
+        await transporter.sendMail(mailOptions);
+        console.log(`Digest email sent successfully to ${user.email}!`);
+        // Create a success log
+        await new EmailLog({ to: user.email, subject: 'Your Daily To-Do List Reminder', status: 'success' }).save();
+      } catch (error) {
+        console.error(`Error sending digest to ${user.email}:`, error);
+        // Create a failure log
+        await new EmailLog({ to: user.email, subject: 'Your Daily To-Do List Reminder', status: 'failure', error: error.message }).save();
+      }
     }
   } catch (error) {
-    console.error('Error sending digest email:', error);
+    console.error('Error in sendDigestEmail function:', error);
   }
 };
 
 // Function 2: Sends an instant notification for a new item
 const sendNewItemEmail = async (userEmail, itemText) => {
-  try {
-    await transporter.sendMail({
-      from: `To-Do List App <${process.env.SENDER_EMAIL}>`,
-      to: userEmail,
-      subject: 'New Item Added to Your List!',
-      html: `<p>A new item has been added to your to-do list:</p><h2>${itemText}</h2>`,
-    });
-    console.log(`New item notification sent successfully to ${userEmail}!`);
-  } catch (error) {
-    console.error('Error sending new item email:', error);
-  }
+    const mailOptions = {
+        from: `To-Do List App <${process.env.SENDER_EMAIL}>`,
+        to: userEmail,
+        subject: 'New Item Added to Your List!',
+        html: `<p>A new item has been added to your to-do list:</p><h2>${itemText}</h2>`,
+    };
+
+    try {
+        await transporter.sendMail(mailOptions);
+        console.log(`New item notification sent successfully to ${userEmail}!`);
+        // Create a success log
+        await new EmailLog({ to: userEmail, subject: 'New Item Added to Your List!', status: 'success' }).save();
+    } catch (error) {
+        console.error(`Error sending new item email to ${userEmail}:`, error);
+        // Create a failure log
+        await new EmailLog({ to: userEmail, subject: 'New Item Added to Your List!', status: 'failure', error: error.message }).save();
+    }
 };
 
 module.exports = { sendDigestEmail, sendNewItemEmail };

@@ -6,8 +6,8 @@ export const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem('token'));
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
+  const [loading, setLoading] = useState(false); 
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -25,14 +25,16 @@ export const AuthProvider = ({ children }) => {
     fetchUser();
   }, [token]);
 
-  const login = (newToken, userData) => {
+const login = (newToken, userData) => {
     localStorage.setItem('token', newToken);
+    localStorage.setItem('user', JSON.stringify(userData)); // Save user object
     setToken(newToken);
     setUser(userData);
   };
 
   const logout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('user'); // Remove user object
     setToken(null);
     setUser(null);
   };
