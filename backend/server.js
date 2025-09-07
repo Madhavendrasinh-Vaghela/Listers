@@ -55,9 +55,6 @@ mongoose.connect(MONGO_URI)
     app.listen(PORT, () => {
       console.log(`Server is running on port: ${PORT}`);
 
-      // --- TEMPORARY TEST: Send email on server start ---
-      // Uncomment the line below to test the email function immediately
-       sendEmail(); 
     });
   })
   .catch((err) => {
