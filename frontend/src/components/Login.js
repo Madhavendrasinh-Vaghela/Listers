@@ -2,7 +2,7 @@
 
 import React, { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api'; // Change this from 'axios' to our api utility
 import { AuthContext } from '../context/AuthContext';
 
 const Login = () => {
@@ -18,15 +18,17 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/users/login', formData);
-      login(response.data.token, response.data.user); // Use the login function from context
-      navigate('/'); // Redirect to the main to-do list page
+      // Use 'api' and the relative path
+      const response = await api.post('/api/users/login', formData); 
+      login(response.data.token, response.data.user);
+      navigate('/');
     } catch (err) {
       setError(err.response.data.msg || 'Something went wrong');
     }
   };
 
   return (
+    // ... the rest of your JSX form is correct and does not need to change
     <div className="auth-form">
       <h2>Login</h2>
       {error && <p className="error-msg">{error}</p>}
