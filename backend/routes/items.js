@@ -2,7 +2,9 @@
 
 const router = require('express').Router();
 let Item = require('../models/item.model');
+let User = require('../models/user.model');
 const auth = require('../middleware/auth'); // Import the auth middleware
+const { sendNewItemEmail } = require('../utils/mailer');
 
 // ROUTE 1: Get all list items FOR THE LOGGED-IN USER
 // We add 'auth' as a second argument to protect this route
@@ -21,14 +23,22 @@ router.post('/add', auth, async (req, res) => {
     const { text } = req.body;
     const newItem = new Item({
       text,
-      user: req.user // Associate item with the logged-in user
+      user: req.user
     });
     const savedItem = await newItem.save();
+    
+    // After saving, find the user's email and send the notification
+    const user = await User.findById(req.user);
+    if (user) {
+      sendNewItemEmail(user.email, savedItem.text);
+    }
+
     res.json(savedItem);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
+
 
 // ROUTE 3: Delete a list item FOR THE LOGGED-IN USER
 router.delete('/:id', auth, async (req, res) => {

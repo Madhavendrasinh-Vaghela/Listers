@@ -7,6 +7,8 @@ const mongoose = require('mongoose');
 const nodemailer = require('nodemailer');
 const cron = require('node-cron');
 const Item = require('./models/item.model'); // Import the Item model
+const { sendDigestEmail } = require('./utils/mailer'); // Import the function
+const User = require('./models/user.model');
 
 // Initialize the Express app
 const app = express();
@@ -31,50 +33,16 @@ const SENDER_PASSWORD = process.env.SENDER_PASSWORD;
 // --- Nodemailer and Cron Job Logic ---
 
 // Function to send the email
-const sendEmail = async () => {
-  try {
-    const items = await Item.find({});
-    if (items.length === 0) {
-      console.log('No items in the list. Email not sent.');
-      return;
-    }
 
-    let itemListHtml = '<h1>Your To-Do List</h1><ul>';
-    items.forEach(item => {
-      itemListHtml += `<li>${item.text}</li>`;
-    });
-    itemListHtml += '</ul>';
-
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: SENDER_EMAIL,
-        pass: SENDER_PASSWORD,
-      },
-    });
-
-    const mailOptions = {
-      from: SENDER_EMAIL,
-      to: SENDER_EMAIL, // Sending to yourself
-      subject: 'Your Daily To-Do List Reminder',
-      html: itemListHtml,
-    };
-
-    await transporter.sendMail(mailOptions);
-    console.log('Daily digest email sent successfully!');
-  } catch (error) {
-    console.error('Error sending email:', error);
-  }
-};
 
 // Schedule the task to run at 8:00 AM every day
 // Cron syntax: 'minute hour day-of-month month day-of-week'
 cron.schedule('0 8 * * *', () => {
-  console.log('Running scheduled job: Sending daily email...');
-  sendEmail();
+  console.log('Running scheduled job: Sending daily email digest...');
+  sendDigestEmail(); // Use the imported function
 }, {
   scheduled: true,
-  timezone: "Asia/Kolkata" // Set your timezone
+  timezone: "Asia/Kolkata"
 });
 
 
